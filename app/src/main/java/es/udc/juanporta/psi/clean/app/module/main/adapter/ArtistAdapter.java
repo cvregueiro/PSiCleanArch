@@ -1,7 +1,9 @@
 package es.udc.juanporta.psi.clean.app.module.main.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -10,12 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import es.udc.juanporta.psi.clean.R;
+import es.udc.juanporta.psi.clean.app.domain.Artist;
 
 public class ArtistAdapter extends Adapter<ArtistAdapter.ArtistHolder> {
 
-    private List<String> mItems;
+    private List<Artist> mItems;
 
-    public ArtistAdapter(List<String> items) {
+    public ArtistAdapter(List<Artist> items) {
 
         mItems = items;
     }
@@ -25,11 +28,8 @@ public class ArtistAdapter extends Adapter<ArtistAdapter.ArtistHolder> {
     public ArtistAdapter.ArtistHolder onCreateViewHolder(@NonNull ViewGroup parent,
                                                          int viewType) {
 
-        // create a new view
-        TextView v = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.row_artist, parent, false);
-
-        ArtistHolder vh = new ArtistHolder(v);
-        return vh;
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_artist, parent, false);
+        return new ArtistHolder(v);
     }
 
     @Override
@@ -42,17 +42,25 @@ public class ArtistAdapter extends Adapter<ArtistAdapter.ArtistHolder> {
     public void onBindViewHolder(@NonNull ArtistAdapter.ArtistHolder holder,
                                  int position) {
 
-        holder.textView.setText(mItems.get(position));
+        holder.bind(mItems.get(position));
     }
 
-    public static class ArtistHolder extends RecyclerView.ViewHolder {
+    static class ArtistHolder extends RecyclerView.ViewHolder {
 
-        private TextView textView;
+        private TextView mTvId;
+        private TextView mTvName;
 
-        public ArtistHolder(TextView v) {
+        private ArtistHolder(View v) {
 
             super(v);
-            textView = v;
+            mTvId = v.findViewById(R.id.row_artist_id);
+            mTvName = v.findViewById(R.id.row_artist_name);
+        }
+
+        private void bind(Artist artist) {
+
+            mTvId.setText(String.valueOf(artist.getId()));
+            mTvName.setText(artist.getName());
         }
     }
 
