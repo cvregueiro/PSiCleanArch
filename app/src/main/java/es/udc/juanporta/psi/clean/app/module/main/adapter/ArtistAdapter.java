@@ -18,9 +18,10 @@ public class ArtistAdapter extends Adapter<ArtistAdapter.ArtistHolder> {
 
     private List<Artist> mItems;
 
-    public ArtistAdapter(List<Artist> items) {
+    public void setItems(List<Artist> items) {
 
         mItems = items;
+        notifyDataSetChanged();
     }
 
     @NonNull
