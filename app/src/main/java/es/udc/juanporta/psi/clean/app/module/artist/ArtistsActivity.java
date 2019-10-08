@@ -17,6 +17,7 @@ import es.udc.juanporta.psi.clean.app.module.artist.adapter.ArtistAdapter;
 import es.udc.juanporta.psi.clean.app.module.artist.presenter.ArtistsPresenter;
 import es.udc.juanporta.psi.clean.app.module.artist.presenter.ArtistsPresenterImp;
 import es.udc.juanporta.psi.clean.app.module.artist.presenter.ArtistsView;
+import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModel;
 
 public class ArtistsActivity extends BaseActivity implements ArtistsView {
 
@@ -45,7 +46,7 @@ public class ArtistsActivity extends BaseActivity implements ArtistsView {
     }
 
     @Override
-    public void showArtists(List<Artist> artists) {
+    public void showArtists(List<ArtistViewModel> artists) {
 
         mAdapter.setItems(artists);
         mEmptyView.setVisibility(View.GONE);

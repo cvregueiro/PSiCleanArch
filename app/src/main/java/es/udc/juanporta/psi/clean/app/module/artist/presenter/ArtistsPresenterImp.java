@@ -2,8 +2,13 @@ package es.udc.juanporta.psi.clean.app.module.artist.presenter;
 
 import android.util.Log;
 
+import java.util.List;
+
 import es.udc.juanporta.psi.clean.app.data.MusicBrainzAPI;
+import es.udc.juanporta.psi.clean.app.domain.Artist;
 import es.udc.juanporta.psi.clean.app.domain.SearchArtists;
+import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModel;
+import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModelMapper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,7 +57,7 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
                 if (response.isSuccessful()) {
 
                     Log.i(TAG, "Response OK: " + response.code());
-                    mView.showArtists(response.body().getArtists());
+                    mView.showArtists(getArtistsViewModel(response.body().getArtists()));
 
                 } else {
 
@@ -72,5 +77,10 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
                 mView.showError();
             }
         });
+    }
+
+    private List<ArtistViewModel> getArtistsViewModel(List<Artist> artists) {
+
+        return new ArtistViewModelMapper(artists).map();
     }
 }
