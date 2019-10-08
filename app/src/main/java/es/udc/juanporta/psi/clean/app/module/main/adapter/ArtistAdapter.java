@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,11 @@ import es.udc.juanporta.psi.clean.app.domain.Artist;
 public class ArtistAdapter extends Adapter<ArtistAdapter.ArtistHolder> {
 
     private List<Artist> mItems;
+
+    public ArtistAdapter() {
+
+        mItems = new ArrayList<>();
+    }
 
     public void setItems(List<Artist> items) {
 
