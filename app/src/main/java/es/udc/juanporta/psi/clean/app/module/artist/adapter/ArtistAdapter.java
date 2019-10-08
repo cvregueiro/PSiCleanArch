@@ -12,18 +12,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import es.udc.juanporta.psi.clean.R;
-import es.udc.juanporta.psi.clean.app.domain.Artist;
+import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModel;
 
 public class ArtistAdapter extends Adapter<ArtistAdapter.ArtistHolder> {
 
-    private List<Artist> mItems;
+    private List<ArtistViewModel> mItems;
 
     public ArtistAdapter() {
 
         mItems = new ArrayList<>();
     }
 
-    public void setItems(List<Artist> items) {
+    public void setItems(List<ArtistViewModel> items) {
 
         mItems = items;
         notifyDataSetChanged();
@@ -63,9 +63,9 @@ public class ArtistAdapter extends Adapter<ArtistAdapter.ArtistHolder> {
             mTvName = v.findViewById(R.id.row_artist_name);
         }
 
-        private void bind(Artist artist) {
+        private void bind(ArtistViewModel artist) {
 
-            mTvId.setText(String.valueOf(artist.getId()));
+            mTvId.setText("-");
             mTvName.setText(artist.getName());
         }
     }
