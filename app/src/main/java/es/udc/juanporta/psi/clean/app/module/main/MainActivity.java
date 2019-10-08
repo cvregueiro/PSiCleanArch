@@ -6,6 +6,7 @@ import butterknife.BindView;
 import es.udc.juanporta.psi.clean.R;
 import es.udc.juanporta.psi.clean.app.data.MusicBrainzAPI;
 import es.udc.juanporta.psi.clean.app.domain.Artist;
+import es.udc.juanporta.psi.clean.app.domain.SearchArtists;
 import es.udc.juanporta.psi.clean.app.module.BaseActivity;
 import es.udc.juanporta.psi.clean.app.module.main.adapter.ArtistAdapter;
 import retrofit2.Call;
@@ -59,18 +60,18 @@ public class MainActivity extends BaseActivity {
 
         String query = "artist:rancid";
         String format = "json";
-        Call<List<Artist>> call = api.searchArtistByName(query, format);
+        Call<SearchArtists> call = api.searchArtistByName(query, format);
 
-        call.enqueue(new Callback<List<Artist>>() {
+        call.enqueue(new Callback<SearchArtists>() {
 
             @Override
-            public void onResponse(Call<List<Artist>> call,
-                                   Response<List<Artist>> response) {
+            public void onResponse(Call<SearchArtists> call,
+                                   Response<SearchArtists> response) {
 
                 if (response.isSuccessful()) {
 
                     Log.i(TAG, "Response OK: " + response.code());
-                    mAdapter.setItems(response.body());
+                    mAdapter.setItems(response.body().getArtists());
 
                 } else {
 
@@ -80,7 +81,7 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Artist>> call,
+            public void onFailure(Call<SearchArtists> call,
                                   Throwable t) {
 
                 Log.e(TAG, "Response fails: " + t.getMessage());
