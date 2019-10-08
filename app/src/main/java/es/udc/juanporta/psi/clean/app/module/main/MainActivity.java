@@ -5,12 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import es.udc.juanporta.psi.clean.R;
+import es.udc.juanporta.psi.clean.app.data.MusicBrainzAPI;
 import es.udc.juanporta.psi.clean.app.domain.Artist;
 import es.udc.juanporta.psi.clean.app.module.BaseActivity;
 import es.udc.juanporta.psi.clean.app.module.main.adapter.ArtistAdapter;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.os.Bundle;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,15 +44,23 @@ public class MainActivity extends BaseActivity {
 
     private List<Artist> getArtists() {
 
-        List<Artist> artists = new ArrayList<>();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://musicbrainz.org/ws/2/")
+                .addConverterFactory(GsonConverterFactory.create()).build();
 
-        artists.add(new Artist(1, "Ben Harper"));
-        artists.add(new Artist(2, "Bon Iver"));
-        artists.add(new Artist(3, "The National"));
-        artists.add(new Artist(4, "Rancid"));
-        artists.add(new Artist(5, "The Black Crows"));
-        artists.add(new Artist(6, "The Band"));
+        MusicBrainzAPI api = retrofit.create(MusicBrainzAPI.class);
 
-        return artists;
+        String query = "artist:rancid";
+        String format = "json";
+        Call<List<Artist>> call = api.searchArtistByName(query, format);
+
+        try {
+
+            return call.execute().body();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 }

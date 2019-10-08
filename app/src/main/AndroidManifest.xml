@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:tools="http://schemas.android.com/tools"
-    package="es.udc.juanporta.psi.clean"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest package="es.udc.juanporta.psi.clean"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:allowBackup="true"
@@ -22,5 +22,7 @@
         </activity>
 
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
