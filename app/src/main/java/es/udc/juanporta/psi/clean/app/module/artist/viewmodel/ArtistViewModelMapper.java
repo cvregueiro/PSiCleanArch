@@ -18,7 +18,7 @@ public class ArtistViewModelMapper {
 
         List<ArtistViewModel> artists = new ArrayList<>();
         for (Artist artist : mArtists) {
-            artists.add(new ArtistViewModel(artist.getName()));
+            artists.add(new ArtistViewModel(artist.getId(), artist.getName()));
         }
         return artists;
     }

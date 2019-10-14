@@ -2,15 +2,34 @@ package es.udc.juanporta.psi.clean.app.module.artist.viewmodel;
 
 public class ArtistViewModel {
 
+    private String id;
     private String name;
+    private String eventDate;
 
-    public ArtistViewModel(String name) {
+    public ArtistViewModel(String id,
+                           String name) {
 
+        this.id = id;
         this.name = name;
+    }
+
+    public String getId() {
+
+        return id;
     }
 
     public String getName() {
 
         return name;
+    }
+
+    public String getEventDate() {
+
+        return eventDate;
+    }
+
+    public void setEventDate(String eventDate) {
+
+        this.eventDate = eventDate;
     }
 }
