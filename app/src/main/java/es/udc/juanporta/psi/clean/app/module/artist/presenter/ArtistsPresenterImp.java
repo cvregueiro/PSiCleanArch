@@ -6,8 +6,11 @@ import java.util.List;
 
 import es.udc.juanporta.psi.clean.BuildConfig;
 import es.udc.juanporta.psi.clean.app.data.MusicBrainzAPI;
+import es.udc.juanporta.psi.clean.app.data.SetListFmAPI;
+import es.udc.juanporta.psi.clean.app.data.interceptor.SetListFmApiInterceptor;
 import es.udc.juanporta.psi.clean.app.domain.Artist;
 import es.udc.juanporta.psi.clean.app.domain.SearchArtists;
+import es.udc.juanporta.psi.clean.app.domain.SetLists;
 import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModel;
 import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModelMapper;
 import okhttp3.Interceptor;
@@ -24,6 +27,8 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
     private final static String TAG = ArtistsPresenterImp.class.getSimpleName();
 
     private ArtistsView mView;
+
+    private List<ArtistViewModel> mArtistsViewModels;
 
     public ArtistsPresenterImp(ArtistsView view) {
 
@@ -68,7 +73,9 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
                 if (response.isSuccessful()) {
 
                     Log.i(TAG, "Response OK: " + response.code());
-                    mView.showArtists(getArtistsViewModel(response.body().getArtists()));
+                    mArtistsViewModels = getArtistsViewModel(response.body().getArtists());
+                    mView.showArtists(mArtistsViewModels);
+                    getLastGigs(mArtistsViewModels);
 
                 } else {
 
@@ -92,6 +99,65 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
 
     private List<ArtistViewModel> getArtistsViewModel(List<Artist> artists) {
 
-        return new ArtistViewModelMapper(artists).map();
+        mArtistsViewModels = new ArtistViewModelMapper(artists).map();
+        return mArtistsViewModels;
+    }
+
+    private void getLastGigs(List<ArtistViewModel> artistsViewModels) {
+
+        int index = 0;
+        for (ArtistViewModel artist : artistsViewModels) {
+
+            getLastGig(artist, index++);
+        }
+    }
+
+    private void getLastGig(ArtistViewModel artist,
+                            int position) {
+
+        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor()
+                .setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+        List<Interceptor> interceptors = okHttpClient.interceptors();
+        interceptors.add(loggingInterceptor);
+        interceptors.add(new SetListFmApiInterceptor());
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.setlist.fm/rest/1.0/")
+                .client(okHttpClient.build()).addConverterFactory(GsonConverterFactory.create()).build();
+
+        SetListFmAPI api = retrofit.create(SetListFmAPI.class);
+
+        Call<SetLists> call = api.searchSetLists(artist.getId());
+
+        call.enqueue(new Callback<SetLists>() {
+
+            @Override
+            public void onResponse(Call<SetLists> call,
+                                   Response<SetLists> response) {
+
+                if (response.isSuccessful()) {
+
+                    Log.i(TAG, "Response OK: " + response.code());
+                    ArtistViewModel artistViewModel = mArtistsViewModels.get(position);
+                    artistViewModel.setEventDate(response.body().getSetLists().get(0).getEventDate());
+                    mView.updateArtist(artistViewModel, position);
+
+                } else {
+
+                    Log.e(TAG, "Response fails: " + response.code());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SetLists> call,
+                                  Throwable t) {
+
+                Log.e(TAG, "Response fails: " + t.getMessage());
+                mView.showEmptyView();
+                mView.showError();
+            }
+        });
     }
 }

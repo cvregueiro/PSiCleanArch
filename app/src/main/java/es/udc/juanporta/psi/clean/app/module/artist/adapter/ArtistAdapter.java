@@ -29,6 +29,13 @@ public class ArtistAdapter extends Adapter<ArtistAdapter.ArtistHolder> {
         notifyDataSetChanged();
     }
 
+    public void updateItem(ArtistViewModel item,
+                           int position) {
+
+        mItems.add(position, item);
+        notifyItemChanged(position);
+    }
+
     @NonNull
     @Override
     public ArtistAdapter.ArtistHolder onCreateViewHolder(@NonNull ViewGroup parent,
@@ -66,7 +73,13 @@ public class ArtistAdapter extends Adapter<ArtistAdapter.ArtistHolder> {
         private void bind(ArtistViewModel artist) {
 
             mTvId.setText("-");
-            mTvName.setText(artist.getName());
+            String name = artist.getName();
+            if (artist.getEventDate() != null) {
+
+                name = name + " (" + artist.getEventDate() + ")";
+            }
+
+            mTvName.setText(name);
         }
     }
 

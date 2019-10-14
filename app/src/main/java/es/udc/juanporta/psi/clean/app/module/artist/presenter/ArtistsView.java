@@ -11,4 +11,6 @@ public interface ArtistsView {
     void showEmptyView();
 
     void showError();
+
+    void updateArtist(ArtistViewModel artist, int position);
 }

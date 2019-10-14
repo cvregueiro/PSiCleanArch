@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import es.udc.juanporta.psi.clean.R;
-import es.udc.juanporta.psi.clean.app.domain.Artist;
 import es.udc.juanporta.psi.clean.app.module.BaseActivity;
 import es.udc.juanporta.psi.clean.app.module.artist.adapter.ArtistAdapter;
 import es.udc.juanporta.psi.clean.app.module.artist.presenter.ArtistsPresenter;
@@ -64,6 +63,13 @@ public class ArtistsActivity extends BaseActivity implements ArtistsView {
     public void showError() {
 
         Toast.makeText(this, R.string.error_general, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void updateArtist(ArtistViewModel artist,
+                             int position) {
+
+        mAdapter.updateItem(artist, position);
     }
 
     private void setUpView() {
