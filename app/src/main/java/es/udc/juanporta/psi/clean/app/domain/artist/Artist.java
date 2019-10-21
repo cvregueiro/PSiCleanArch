@@ -1,4 +1,4 @@
-package es.udc.juanporta.psi.clean.app.domain;
+package es.udc.juanporta.psi.clean.app.domain.artist;
 
 import com.google.gson.annotations.SerializedName;
 

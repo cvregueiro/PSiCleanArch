@@ -8,9 +8,9 @@ import es.udc.juanporta.psi.clean.BuildConfig;
 import es.udc.juanporta.psi.clean.app.data.MusicBrainzAPI;
 import es.udc.juanporta.psi.clean.app.data.SetListFmAPI;
 import es.udc.juanporta.psi.clean.app.data.interceptor.SetListFmApiInterceptor;
-import es.udc.juanporta.psi.clean.app.domain.Artist;
-import es.udc.juanporta.psi.clean.app.domain.SearchArtists;
-import es.udc.juanporta.psi.clean.app.domain.SetLists;
+import es.udc.juanporta.psi.clean.app.domain.artist.Artist;
+import es.udc.juanporta.psi.clean.app.domain.artist.Artists;
+import es.udc.juanporta.psi.clean.app.domain.gig.Gigs;
 import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModel;
 import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModelMapper;
 import okhttp3.Interceptor;
@@ -62,13 +62,13 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
 
         String query = "artist:rancid";
         String format = "json";
-        Call<SearchArtists> call = api.searchArtistByName(query, format);
+        Call<Artists> call = api.searchArtistByName(query, format);
 
-        call.enqueue(new Callback<SearchArtists>() {
+        call.enqueue(new Callback<Artists>() {
 
             @Override
-            public void onResponse(Call<SearchArtists> call,
-                                   Response<SearchArtists> response) {
+            public void onResponse(Call<Artists> call,
+                                   Response<Artists> response) {
 
                 if (response.isSuccessful()) {
 
@@ -87,7 +87,7 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
             }
 
             @Override
-            public void onFailure(Call<SearchArtists> call,
+            public void onFailure(Call<Artists> call,
                                   Throwable t) {
 
                 Log.e(TAG, "Response fails: " + t.getMessage());
@@ -128,19 +128,19 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
 
         SetListFmAPI api = retrofit.create(SetListFmAPI.class);
 
-        Call<SetLists> call = api.searchSetLists(artist.getId());
+        Call<Gigs> call = api.searchSetLists(artist.getId());
 
-        call.enqueue(new Callback<SetLists>() {
+        call.enqueue(new Callback<Gigs>() {
 
             @Override
-            public void onResponse(Call<SetLists> call,
-                                   Response<SetLists> response) {
+            public void onResponse(Call<Gigs> call,
+                                   Response<Gigs> response) {
 
                 if (response.isSuccessful()) {
 
                     Log.i(TAG, "Response OK: " + response.code());
                     ArtistViewModel artistViewModel = mArtistsViewModels.get(position);
-                    artistViewModel.setEventDate(response.body().getSetLists().get(0).getEventDate());
+                    artistViewModel.setEventDate(response.body().getGigs().get(0).getEventDate());
                     mView.updateArtist(artistViewModel, position);
 
                 } else {
@@ -151,7 +151,7 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
             }
 
             @Override
-            public void onFailure(Call<SetLists> call,
+            public void onFailure(Call<Gigs> call,
                                   Throwable t) {
 
                 Log.e(TAG, "Response fails: " + t.getMessage());

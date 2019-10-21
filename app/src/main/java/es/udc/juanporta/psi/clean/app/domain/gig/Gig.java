@@ -1,13 +1,13 @@
-package es.udc.juanporta.psi.clean.app.domain;
+package es.udc.juanporta.psi.clean.app.domain.gig;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SetList {
+public class Gig {
 
     @SerializedName("eventDate")
     private String eventDate;
 
-    public SetList(String eventDate) {
+    public Gig(String eventDate) {
 
         this.eventDate = eventDate;
     }
