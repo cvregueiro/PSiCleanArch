@@ -1,10 +1,10 @@
-package es.udc.juanporta.psi.clean.app.domain;
+package es.udc.juanporta.psi.clean.app.domain.artist;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class SearchArtists {
+public class Artists {
 
     @SerializedName("count")
     private int count;
@@ -12,8 +12,8 @@ public class SearchArtists {
     @SerializedName("artists")
     private List<Artist> artists;
 
-    public SearchArtists(int count,
-                         List<Artist> artists) {
+    public Artists(int count,
+                   List<Artist> artists) {
 
         this.count = count;
         this.artists = artists;

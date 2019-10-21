@@ -3,7 +3,7 @@ package es.udc.juanporta.psi.clean.app.module.artist.viewmodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.udc.juanporta.psi.clean.app.domain.Artist;
+import es.udc.juanporta.psi.clean.app.domain.artist.Artist;
 
 public class ArtistViewModelMapper {
 
