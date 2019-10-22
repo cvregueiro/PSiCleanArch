@@ -12,7 +12,7 @@ public class SetListFmApiInterceptor implements Interceptor {
     private static final String API_KEY_HEADER = "x-api-key";
     private static final String ACCEPT_HEADER = "Accept";
 
-    private static final String API_KEY = "INSERT_YOUR_API_KEY_HERE";
+    private static final String API_KEY = "HHQghTl1wVmNY_9z17UDOdJeIYl5PC6zkmuv";
     private static final String JSON_RESPONSE = "application/json";
 
     @Override
