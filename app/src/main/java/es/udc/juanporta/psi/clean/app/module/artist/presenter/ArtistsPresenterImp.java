@@ -1,15 +1,16 @@
 package es.udc.juanporta.psi.clean.app.module.artist.presenter;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.List;
 
 import es.udc.juanporta.psi.clean.BuildConfig;
-import es.udc.juanporta.psi.clean.app.data.MusicBrainzAPI;
 import es.udc.juanporta.psi.clean.app.data.SetListFmAPI;
 import es.udc.juanporta.psi.clean.app.data.interceptor.SetListFmApiInterceptor;
 import es.udc.juanporta.psi.clean.app.domain.artist.Artist;
-import es.udc.juanporta.psi.clean.app.domain.artist.Artists;
+import es.udc.juanporta.psi.clean.app.domain.artist.service.ArtistService;
+import es.udc.juanporta.psi.clean.app.domain.artist.service.ArtistServiceImp;
 import es.udc.juanporta.psi.clean.app.domain.gig.Gigs;
 import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModel;
 import es.udc.juanporta.psi.clean.app.module.artist.viewmodel.ArtistViewModelMapper;
@@ -30,6 +31,8 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
 
     private List<ArtistViewModel> mArtistsViewModels;
 
+    private ArtistService mService = new ArtistServiceImp();
+
     public ArtistsPresenterImp(ArtistsView view) {
 
         mView = view;
@@ -38,63 +41,12 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
     @Override
     public void initFlow() {
 
-        getArtists();
+        new GetArtistsTask().execute();
     }
 
     @Override
     public void onClickArtist() {
 
-    }
-
-    private void getArtists() {
-
-        OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder();
-
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor()
-                .setLevel(BuildConfig.DEBUG ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
-        List<Interceptor> interceptors = okHttpClient.interceptors();
-        interceptors.add(loggingInterceptor);
-
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://musicbrainz.org/ws/2/").client(okHttpClient.build())
-                .addConverterFactory(GsonConverterFactory.create()).build();
-
-        MusicBrainzAPI api = retrofit.create(MusicBrainzAPI.class);
-
-        String query = "artist:rancid";
-        String format = "json";
-        Call<Artists> call = api.searchArtistByName(query, format);
-
-        call.enqueue(new Callback<Artists>() {
-
-            @Override
-            public void onResponse(Call<Artists> call,
-                                   Response<Artists> response) {
-
-                if (response.isSuccessful()) {
-
-                    Log.i(TAG, "Response OK: " + response.code());
-                    mArtistsViewModels = getArtistsViewModel(response.body().getArtists());
-                    mView.showArtists(mArtistsViewModels);
-                    getLastGigs(mArtistsViewModels);
-
-                } else {
-
-                    Log.e(TAG, "Response fails: " + response.code());
-                    mView.showEmptyView();
-                    mView.showError();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<Artists> call,
-                                  Throwable t) {
-
-                Log.e(TAG, "Response fails: " + t.getMessage());
-                mView.showEmptyView();
-                mView.showError();
-            }
-        });
     }
 
     private List<ArtistViewModel> getArtistsViewModel(List<Artist> artists) {
@@ -159,5 +111,20 @@ public class ArtistsPresenterImp implements ArtistsPresenter {
                 mView.showError();
             }
         });
+    }
+
+    private class GetArtistsTask extends AsyncTask<String, Void, List<Artist>> {
+
+        protected List<Artist> doInBackground(String... textToSearch) {
+
+            return mService.searchArtists("Green Day");
+        }
+
+        protected void onPostExecute(List<Artist> result) {
+
+            mArtistsViewModels = getArtistsViewModel(result);
+            mView.showArtists(mArtistsViewModels);
+            getLastGigs(mArtistsViewModels);
+        }
     }
 }
